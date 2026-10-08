@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Misi Analisis Kesalahan: SPTLDV</title>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,300..700;1,300..700&family=Google+Sans+Code:ital,wght,MONO@0,300..700,0..1;1,300..700,0..1&display=swap');
+
+    :root {
+      --ff-sans: 'Google Sans Flex', sans-serif;
+      --ff-mono: 'Google Sans Code', monospace;
+      --surface: #fdfcfc;
+      --surface-dim: #f2f0f0;
+      --surface-bright: #ffffff;
+      --surface-container: #f2f0f0;
+      --surface-container-high: #e6e6e6;
+      --on-surface: #000000;
+      --on-surface-variant: rgba(0, 0, 0, 0.55);
+      --primary: #3186ff;
+      --primary-container: #dcf1ff;
+      --accent-fixed: #3186ff;
+      --positive: #008052;
+      --positive-container: #daf9d4;
+      --error: #de2d29;
+      --error-container: #ffdeec;
+      --outline: #727676;
+      --stroke-default: #e3e3e3;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--ff-sans);
+      background: var(--surface);
+      color: var(--on-surface);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .widget-container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 24px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .header-card {
+      background: var(--surface-dim);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .step-badge, .score-badge {
+      font-family: var(--ff-mono);
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .step-badge {
+      background: var(--primary-container);
+      color: var(--accent-fixed);
+      font-weight: 600;
+    }
+
+    .score-badge {
+      background: var(--surface-bright);
+      border: 1px solid var(--stroke-default);
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: var(--surface-container-high);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .problem-box {
+      background: var(--surface-container);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .scratchpad-card {
+      background: var(--surface-bright);
+      border: 1px dashed var(--outline);
+      border-radius: 12px;
+      padding: 16px;
+      margin-block: 8px;
+    }
+
+    .scratchpad-title {
+      font-family: var(--ff-mono);
+      font-size: 13px;
+      color: var(--on-surface-variant);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .math-text {
+      font-family: var(--ff-mono);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .option-card {
+      background: var(--surface-bright);
+      border: 1px solid var(--stroke-default);
+      border-radius: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .option-card:hover { background: var(--surface-container-high); }
+    .option-card.is-selected { border-color: var(--primary); background: var(--primary-container); }
+    .option-card.is-correct { border-color: var(--positive); background: var(--positive-container); }
+    .option-card.is-wrong { border-color: var(--error); background: var(--error-container); }
+
+    .option-radio {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--outline);
+      margin-top: 2px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+
+    .option-card.is-selected .option-radio {
+      border-color: var(--accent-fixed);
+      background: var(--accent-fixed);
+    }
+
+    .option-radio::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--surface-bright);
+      display: none;
+    }
+
+    .option-card.is-selected .option-radio::after { display: block; }
+
+    .explanation-card {
+      background: var(--surface-dim);
+      border-left: 4px solid var(--primary);
+      border-radius: 0 12px 12px 0;
+      padding: 12px 16px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .explanation-card.is-visible { display: block; }
+
+    .nav-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .lumi-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 20px;
+      font-family: var(--ff-sans);
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 999px;
+      border: 1px solid var(--stroke-default);
+      background: var(--surface-bright);
+      color: var(--on-surface);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .lumi-btn:hover:not(:disabled) { background: var(--surface-container-high); }
+    .lumi-btn-primary { background: var(--primary); color: white; border-color: transparent; }
+    .lumi-btn-primary:hover:not(:disabled) { background: #1a6fe6; }
+    .lumi-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .takeaway-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+    .takeaway-item { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; line-height: 1.4; }
+    .takeaway-bullet { color: var(--primary); font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="widget-container">
+    <div class="header-card">
+      <div class="header-top">
+        <span id="step-badge" class="step-badge">Tahap 1 / 8</span>
+        <span id="score-badge" class="score-badge">Skor Diagnosis: 0/6</span>
+      </div>
+      <div class="progress-bar-container">
+        <div id="progress-fill" class="progress-bar-fill"></div>
+      </div>
+      <h2 id="step-title" style="margin: 4px 0 0 0; font-size: 20px;">Misi Analisis Kesalahan: SPTLDV</h2>
+    </div>
+
+    <div id="content-zone">
+      <!-- Dynamic step content injected here -->
+    </div>
+
+    <div class="nav-actions">
+      <button id="btn-prev" class="lumi-btn" style="visibility: hidden;">Kembali</button>
+      <button id="btn-next" class="lumi-btn lumi-btn-primary" disabled>Mulai Diagnosis</button>
+    </div>
+  </div>
+
+  <script>
+    const MISSION_DATA = [
+      {
+        step: 1,
+        type: "intro",
+        title: "Misi Analisis Kesalahan: SPTLDV",
+        intro_text: "Halo, Siswa-siswi Kelas XII yang hebat! Mari asah ketelitianmu pada materi Sistem Pertidaksamaan Linear Dua Variabel (SPTLDV) dan program linear. Kesalahan dalam menentukan daerah himpunan penyelesaian (DHP) dan uji titik pojok sangat sering terjadi pada ujian TKA.",
+        problem: {
+          text: "Seorang petani memupuk tanaman menggunakan dua jenis pupuk (A dan B) dengan batasan: <br>&bull; $2x + y \\geq 12$<br>&bull; $x + 2y \\geq 10$<br>&bull; $x \\geq 0, y \\geq 0$<br>Fungsi objektif keuntungan adalah $f(x,y) = 40.000x + 30.000y$. Tentukan keuntungan minimumnya!"
+        },
+        instruction: "Tugasmu adalah mendiagnosis 6 kesalahan logika dan kecerobohan yang dilakukan siswa fiktif dalam menyelesaikan SPTLDV ini. Sudah siap?"
+      },
+      {
+        step: 2,
+        type: "quiz",
+        title: "Analisis Kasus 1: Coretan Budi (Titik Potong Grafik)",
+        student: "Budi",
+        wrong_answer_html: "Untuk garis 2x + y = 12:<br>Jika x = 0, maka y = 6 &rArr; Titik (0, 6)<br>Jika y = 0, maka x = 6 &rArr; Titik (6, 0)",
+        question: "Budi mencari titik potong sumbu untuk garis pertama. Namun ia melakukan kesalahan hitung sederhana. Di mana letaknya?",
+        options: [
+          "Saat y = 0, perhitungan 2x = 12 menghasilkan x = 6 sudah benar, tapi Budi menuliskannya terbalik pada koordinat (6,0).",
+          "Saat y = 0, persamaan 2x + 0 = 12 seharusnya menghasilkan x = 6, tetapi jika x = 0 maka y = 12, bukan 6.",
+          "Budi seharusnya memasukkan nilai x dan y secara bersamaan bernilai 1."
+        ],
+        correct_index: 1,
+        explanation: "Tepat sekali! Saat $x = 0$, maka $2(0) + y = 12 \\implies y = 12$. Budi menuliskan $y = 6$, yang mana itu adalah nilai ketika $x = 6$. Kesalahan kecil ini membuat grafik garis miring Budi bergeser jauh dari posisi aslinya."
+      },
+      {
+        step: 3,
+        type: "quiz",
+        title: "Analisis Kasus 2: Coretan Siti (Uji Titik Arsiran)",
+        student: "Siti",
+        wrong_answer_html: "Pertidaksamaan: 2x + y &ge; 12<br>Siti menguji titik (0,0):<br>2(0) + 0 &ge; 12 &rArr; 0 &ge; 12 (SALAH).<br>Karena salah, daerah yang memuat (0,0) diarsir.",
+        question: "Siti melakukan uji titik (0,0) pada pertidaksamaan. Namun ia keliru dalam menarik kesimpulan arsiran. Apa kesalahannya?",
+        options: [
+          "Titik (0,0) tidak boleh digunakan untuk menguji pertidaksamaan linear dua variabel.",
+          "Karena hasil uji bernilai SALAH, daerah yang memuat (0,0) JANGAN DIARSIR (atau harus dijauhi), bukan malah diarsir.",
+          "Tanda pertidaksamaan &ge; otomatis membuat arsiran selalu ke arah kiri bawah."
+        ],
+        correct_index: 1,
+        explanation: "Jeli sekali! Jika hasil uji suatu titik bernilai **SALAH**, artinya daerah yang memuat titik tersebut **bukan** penyelesaiannya, sehingga harus diarsir menjauhi titik tersebut (atau dibuang bersih untuk daerah bersih). Siti salah mengarsir wilayah."
+      },
+      {
+        step: 4,
+        type: "quiz",
+        title: "Analisis Kasus 3: Coretan Doni (Eliminasi Batas Wilayah)",
+        student: "Doni",
+        wrong_answer_html: "Sistem garis batas:<br>1) 2x + y = 12 &nbsp;&nbsp;&nbsp;| dikali 2 | &rArr; 4x + 2y = 24<br>2) x + 2y = 10<br>---------------------------------- (-)<br>3x = 14 &rArr; x = 14/3",
+        question: "Doni mencari titik potong kedua garis batas untuk menemukan titik pojok DHP. Namun ia keliru saat menyamakan koefisien. Di mana letak salahnya?",
+        options: [
+          "Doni salah mengurangkan 24 - 10, seharusnya hasilnya 20.",
+          "Doni mengalikan persamaan (1) dengan 2, tetapi ia lupa mengalikan konstanta 12 dengan 2 (seharusnya 24 sudah benar, tapi pengalian suku lain sering luput).",
+          "Doni mengalikan persamaan (1) dengan 2, tapi konstanta 12 di ruas kanan lupa dikalikan 2 (seharusnya 24, bukan 12)."
+        ],
+        correct_index: 2,
+        explanation: "Mantap! Sifat distributif perkalian persamaan sering menjebak. Jika seluruh persamaan $2x + y = 12$ dikalikan 2, maka menjadi $4x + 2y = 24$. Doni seringkali menuliskan angka 12 tetap utuh di ruas kanan, sehingga proses eliminasi berikutnya berantakan."
+      },
+      {
+        step: 5,
+        type: "quiz",
+        title: "Analisis Kasus 4: Coretan Rina (Menentukan Titik Pojok)",
+        student: "Rina",
+        wrong_answer_html: "Karena kendala x &ge; 0 dan y &ge; 0 serta tanda pertidaksamaan adalah (&ge;), maka daerah himpunan penyelesaiannya dibatasi oleh titik pojok:<br>(0,0), (6,0), dan (0,5).",
+        question: "Rina menguji titik-titik pojok untuk dimasukkan ke fungsi objektif. Namun daerah penyelesaian untuk tanda (&ge;) memiliki karakteristik tertentu pada kuadran pertama. Apa kesalahan Rina?",
+        options: [
+          "Rina melewatkan titik potong antar kedua garis di dalam DHP, dan mengira batasnya hanya memotong sumbu koordinat.",
+          "Titik (0,0) tidak mungkin menjadi titik pojok jika tandanya lebih dari sama dengan (&ge;).",
+          "Rina salah membaca titik potong sumbu y untuk garis kedua, seharusnya (0,10)."
+        ],
+        correct_index: 0,
+        explanation: "Super Teliti! Untuk sistem pertidaksamaan dengan tanda (&ge;), DHP berada di *daerah luar* (menjauhi titik pusat). Titik pojoknya mencakup perpotongan sumbu koordinat DAN titik potong antar garis itu sendiri di kuadran I. Rina lupa menghitung titik potong antar garis."
+      },
+      {
+        step: 6,
+        type: "quiz",
+        title: "Analisis Kasus 5: Coretan Maya (Miskonsepsi Minimum vs Maksimum)",
+        student: "Maya",
+        wrong_answer_html: "Setelah uji titik pojok diperoleh nilai f(x,y):\n&bull; Di titik A = 240.000\n&bull; Di titik B = 310.000\n&bull; Di titik C = 200.000\n\nMaka nilai minimum keuntungan adalah 310.000."
+      },
+      {
+        step: 6,
+        type: "quiz",
+        title: "Analisis Kasus 5: Coretan Maya (Miskonsepsi Minimum vs Maksimum)",
+        student: "Maya",
+        wrong_answer_html: "Setelah uji titik pojok diperoleh nilai f(x,y):\n&bull; Di titik A = 240.000\n&bull; Di titik B = 310.000\n&bull; Di titik C = 200.000\n\nMaka nilai minimum keuntungan adalah 310.000.",
+        question: "Maya sudah menghitung nilai fungsi objektif di setiap titik pojok dengan benar. Namun ia salah menyimpulkan pertanyaan akhir. Mengapa?",
+        options: [
+          "Maya memilih angka terbesar (310.000) padahal yang ditanyakan adalah nilai MINIMUM (terkecil), yaitu 200.000.",
+          "Maya seharusnya menjumlahkan seluruh nilai titik pojok untuk mencari rata-ratanya.",
+          "Nilai minimum pada program linear selalu berada di titik (0,0)."
+        ],
+        correct_index: 0,
+        explanation: "Sangat Tepat! Ini adalah jebakan klasik psikologis ujian: siswa terbiasa mencari nilai maksimum/terbesar. Ketika soal meminta **minimum**, pilih nilai yang paling kecil di antara titik pojok yang memenuhi (yaitu 200.000). Selalu baca perintah akhir soal!"
+      },
+      {
+        step: 7,
+        type: "outro",
+        title: "Misi Selesai, Ahli SPTLDV!",
+        outro_text: "Luar Biasa! Kamu telah berhasil mendiagnosis 5 jebakan utama dalam pengerjaan SPTLDV dan Program Linear, mulai dari kesalahan titik potong sumbu, aturan arsiran uji titik, distribusi eliminasi, hingga salah mengambil kesimpulan nilai minimum.",
+        takeaways: [
+          "1. Teliti saat mencari titik potong sumbu x (saat y=0) dan sumbu y (saat x=0).",
+          "2. Hasil uji titik yang SALAH berarti daerah tersebut menjauhi arsiran.",
+          "3. Distribusikan pengali secara adil ke seluruh suku dalam eliminasi sistem.",
+          "4. Perhatikan titik potong antar garis sebagai bagian dari titik pojok DHP.",
+          "5. Baca ulang apakah yang diminta soal adalah nilai minimum atau maksimum."
+        ],
+        final_answer: "Nilai Minimum = 200.000"
+      }
+    ];
+
+    const state = {
+      currentStep: 0,
+      answers: {},
+      scores: {}
+    };
+
+    function renderProblemReminder() {
+      const p = MISSION_DATA[0].problem;
+      return `
+        <div class="problem-box" style="margin-bottom: 16px;">
+          <strong>Reminder Soal Utama:</strong><br>
+          <div style="font-family: var(--ff-mono); font-size: 13px; margin-top: 6px; line-height: 1.5;">${p.text}</div>
+        </div>
+      `;
+    }
+
+    function renderStepContent() {
+      const data = MISSION_DATA[state.currentStep];
+      const container = document.getElementById('content-zone');
+
+      if (data.type === 'intro') {
+        const p = data.problem;
+        container.innerHTML = `
+          <p style="margin-top: 0; font-size: 16px; line-height: 1.5;">${data.intro_text}</p>
+          <div class="problem-box" style="margin-block: 16px;">
+            <p style="margin: 0 0 8px 0; font-size: 16px;"><strong>Soal Utama:</strong></p>
+            <div style="font-family: var(--ff-mono); font-size: 14px; line-height: 1.5;">${p.text}</div>
+          </div>
+          <p style="color: var(--on-surface-variant);">${data.instruction}</p>
+        `;
+      } else if (data.type === 'quiz') {
+        const chosen = state.answers[state.currentStep];
+        const isAnswered = chosen !== undefined;
+        const isCorrect = isAnswered && chosen === data.correct_index;
+
+        const optionsHTML = data.options.map((opt, idx) => {
+          let cardClass = "option-card";
+          if (isAnswered) {
+            if (idx === data.correct_index) cardClass += " is-correct";
+            else if (idx === chosen) cardClass += " is-wrong";
+          } else if (idx === chosen) {
+            cardClass += " is-selected";
+          }
+
+          return `
+            <div class="${cardClass}" onclick="selectOption(${idx})">
+              <div class="option-radio"></div>
+              <div style="flex: 1; font-size: 15px; line-height: 1.4;">${opt}</div>
+            </div>
+          `;
+        }).join('');
+
+        container.innerHTML = `
+          ${renderProblemReminder()}
+          <div class="scratchpad-card">
+            <div class="scratchpad-title">Coretan Jawaban ${data.student} (Mengandung Kesalahan):</div>
+            <div class="math-text">${data.wrong_answer_html}</div>
+          </div>
+          <p style="margin: 16px 0 8px 0; font-size: 18px; font-weight: 600;">${data.question}</p>
+          <div class="options-group">
+            ${optionsHTML}
+          </div>
+          <div class="explanation-card ${isAnswered ? 'is-visible' : ''}">
+            <p style="margin: 0 0 4px 0; font-weight: bold; color: ${isCorrect ? 'var(--positive)' : 'var(--error)'};">
+              ${isCorrect ? 'Diagnosis Tepat!' : 'Diagnosis Kurang Tepat'}
+            </p>
+            <p style="margin: 0; font-size: 15px; line-height: 1.5;">${data.explanation}</p>
+          </div>
+        `;
+      } else if (data.type === 'outro') {
+        const takeawayHTML = data.takeaways.map(t => `
+          <div class="takeaway-item">
+            <span class="takeaway-bullet">&bull;</span>
+            <span class="math-text" style="font-size: 14px;">${t}</span>
+          </div>
+        `).join('');
+
+        container.innerHTML = `
+          <p style="margin-top: 0; font-size: 16px; line-height: 1.5;">${data.outro_text}</p>
+          <div class="scratchpad-card" style="border-style: solid; border-color: var(--primary);">
+            <div class="scratchpad-title">Rangkuman Insight Penting:</div>
+            <div class="takeaway-list">
+              ${takeawayHTML}
+            </div>
+          </div>
+          <div class="problem-box" style="margin-top: 16px;">
+            <strong>Tantangan Terakhir:</strong><br>
+            Ambil selembar kertas, dan hitung ulang nilai minimum secara utuh dengan menggambar grafiknya.<br>
+            <em style="color: var(--on-surface-variant); font-size: 13px;">(Pencocokan hasil akhir: ${data.final_answer})</em>.
+          </div>
+        `;
+      }
+    }
+
+    function updateHeaderAndNav() {
+      const totalSteps = MISSION_DATA.length;
+      const currentIdx = state.currentStep;
+      const data = MISSION_DATA[currentIdx];
+
+      document.getElementById('step-badge').textContent = `Tahap ${currentIdx + 1} / ${totalSteps}`;
+      document.getElementById('step-title').textContent = data.title;
+      document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / totalSteps) * 100}%`;
+
+      const totalCorrect = Object.values(state.scores).filter(Boolean).length;
+      document.getElementById('score-badge').textContent = `Skor Diagnosis: ${totalCorrect}/5`;
+
+      const btnPrev = document.getElementById('btn-prev');
+      const btnNext = document.getElementById('btn-next');
+
+      btnPrev.style.visibility = currentIdx > 0 ? 'visible' : 'hidden';
+
+      if (data.type === 'intro') {
+        btnNext.textContent = 'Mulai Diagnosis';
+        btnNext.disabled = false;
+      } else if (data.type === 'quiz') {
+        const isAnswered = state.answers[currentIdx] !== undefined;
+        btnNext.textContent = currentIdx === totalSteps - 2 ? 'Lihat Hasil Misi' : 'Kasus Selanjutnya';
+        btnNext.disabled = !isAnswered;
+      } else if (data.type === 'outro') {
+        btnNext.textContent = 'Ulangi Misi';
+        btnNext.disabled = false;
+      }
+    }
+
+    function selectOption(optIndex) {
+      const currentIdx = state.currentStep;
+      if (MISSION_DATA[currentIdx].type !== 'quiz') return;
+      if (state.answers[currentIdx] !== undefined) return;
+
+      state.answers[currentIdx] = optIndex;
+      state.scores[currentIdx] = (optIndex === MISSION_DATA[currentIdx].correct_index);
+      
+      renderStepContent();
+      updateHeaderAndNav();
+    }
+
+    document.getElementById('btn-prev').addEventListener('click', () => {
+      if (state.currentStep > 0) {
+        state.currentStep--;
+        renderStepContent();
+        updateHeaderAndNav();
+      }
+    });
+
+    document.getElementById('btn-next').addEventListener('click', () => {
+      if (state.currentStep < MISSION_DATA.length - 1) {
+        state.currentStep++;
+      } else {
+        state.currentStep = 0;
+        state.answers = {};
+        state.scores = {};
+      }
+      renderStepContent();
+      updateHeaderAndNav();
+    });
+
+    renderStepContent();
+    updateHeaderAndNav();
+  </script>
+</body>
+</html>
