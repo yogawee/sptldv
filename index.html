@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Misi Analisis Kesalahan: SPTLDV</title>
   
+  <!-- KaTeX for beautiful math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,300..700;1,300..700&family=Google+Sans+Code:ital,wght,MONO@0,300..700,0..1;1,300..700,0..1&display=swap');
 
@@ -105,7 +110,7 @@
       border-radius: 8px;
       padding: 12px 16px;
       font-size: 14px;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     .scratchpad-card {
@@ -235,7 +240,7 @@
   <div class="widget-container">
     <div class="header-card">
       <div class="header-top">
-        <span id="step-badge" class="step-badge">Tahap 1 / 8</span>
+        <span id="step-badge" class="step-badge">Tahap 1 / 7</span>
         <span id="score-badge" class="score-badge">Skor Diagnosis: 0/6</span>
       </div>
       <div class="progress-bar-container">
@@ -260,9 +265,9 @@
         step: 1,
         type: "intro",
         title: "Misi Analisis Kesalahan: SPTLDV",
-        intro_text: "Halo, Siswa-siswi Kelas XII yang hebat! Mari asah ketelitianmu pada materi Sistem Pertidaksamaan Linear Dua Variabel (SPTLDV) dan program linear. Kesalahan dalam menentukan daerah himpunan penyelesaian (DHP) dan uji titik pojok sangat sering terjadi pada ujian TKA.",
+        intro_text: "Halo, Siswa-siswi Kelas XII yang hebat! Mari asah ketelitianmu pada materi Sistem Pertidaksamaan Linear Dua Variabel (SPTLDV). Kesalahan dalam menentukan titik potong, uji titik arsiran, hingga penyimpulan nilai minimum/maksimum sering terjadi pada ujian TKA.",
         problem: {
-          text: "Seorang petani memupuk tanaman menggunakan dua jenis pupuk (A dan B) dengan batasan: <br>&bull; $2x + y \\geq 12$<br>&bull; $x + 2y \\geq 10$<br>&bull; $x \\geq 0, y \\geq 0$<br>Fungsi objektif keuntungan adalah $f(x,y) = 40.000x + 30.000y$. Tentukan keuntungan minimumnya!"
+          text: "Seorang petani memupuk tanaman menggunakan dua jenis pupuk (A dan B) dengan batasan: <br>&bull; $2x + y \\geq 12$<br>&bull; $x + 2y \\geq 10$<br>&bull; $x \\geq 0, \\; y \\geq 0$<br>Fungsi objektif keuntungan adalah $f(x,y) = 40.000x + 30.000y$. Tentukan keuntungan minimumnya!"
         },
         instruction: "Tugasmu adalah mendiagnosis 6 kesalahan logika dan kecerobohan yang dilakukan siswa fiktif dalam menyelesaikan SPTLDV ini. Sudah siap?"
       },
@@ -271,14 +276,14 @@
         type: "quiz",
         title: "Analisis Kasus 1: Coretan Budi (Titik Potong Grafik)",
         student: "Budi",
-        wrong_answer_html: "Untuk garis 2x + y = 12:<br>Jika x = 0, maka y = 6 &rArr; Titik (0, 6)<br>Jika y = 0, maka x = 6 &rArr; Titik (6, 0)",
+        wrong_answer_html: "Untuk garis $2x + y = 12$:<br>Jika $x = 0$, maka $y = 6 \\implies$ Titik $(0, 6)$<br>Jika $y = 0$, maka $x = 6 \\implies$ Titik $(6, 0)$",
         question: "Budi mencari titik potong sumbu untuk garis pertama. Namun ia melakukan kesalahan hitung sederhana. Di mana letaknya?",
         options: [
-          "Saat y = 0, perhitungan 2x = 12 menghasilkan x = 6 sudah benar, tapi Budi menuliskannya terbalik pada koordinat (6,0).",
-          "Saat y = 0, persamaan 2x + 0 = 12 seharusnya menghasilkan x = 6, tetapi jika x = 0 maka y = 12, bukan 6.",
-          "Budi seharusnya memasukkan nilai x dan y secara bersamaan bernilai 1."
+          "Saat $y = 0$, persamaan $2x + 0 = 12$ menghasilkan $x = 6$, tetapi jika $x = 0$ maka $y = 12$, bukan $6$.",
+          "Saat $y = 0$, perhitungan $2x = 12$ menghasilkan $x = 6$ sudah benar, tapi Budi menuliskannya terbalik pada koordinat $(6,0)$.",
+          "Budi seharusnya memasukkan nilai $x$ dan $y$ secara bersamaan bernilai $1$."
         ],
-        correct_index: 1,
+        correct_index: 0,
         explanation: "Tepat sekali! Saat $x = 0$, maka $2(0) + y = 12 \\implies y = 12$. Budi menuliskan $y = 6$, yang mana itu adalah nilai ketika $x = 6$. Kesalahan kecil ini membuat grafik garis miring Budi bergeser jauh dari posisi aslinya."
       },
       {
@@ -286,29 +291,29 @@
         type: "quiz",
         title: "Analisis Kasus 2: Coretan Siti (Uji Titik Arsiran)",
         student: "Siti",
-        wrong_answer_html: "Pertidaksamaan: 2x + y &ge; 12<br>Siti menguji titik (0,0):<br>2(0) + 0 &ge; 12 &rArr; 0 &ge; 12 (SALAH).<br>Karena salah, daerah yang memuat (0,0) diarsir.",
-        question: "Siti melakukan uji titik (0,0) pada pertidaksamaan. Namun ia keliru dalam menarik kesimpulan arsiran. Apa kesalahannya?",
+        wrong_answer_html: "Pertidaksamaan: $2x + y \\geq 12$<br>Siti menguji titik $(0,0)$:<br>$2(0) + 0 \\geq 12 \\implies 0 \\geq 12$ (SALAH).<br>Karena salah, daerah yang memuat $(0,0)$ diarsir.",
+        question: "Siti melakukan uji titik $(0,0)$ pada pertidaksamaan. Namun ia keliru dalam menarik kesimpulan arsiran. Apa kesalahannya?",
         options: [
-          "Titik (0,0) tidak boleh digunakan untuk menguji pertidaksamaan linear dua variabel.",
-          "Karena hasil uji bernilai SALAH, daerah yang memuat (0,0) JANGAN DIARSIR (atau harus dijauhi), bukan malah diarsir.",
-          "Tanda pertidaksamaan &ge; otomatis membuat arsiran selalu ke arah kiri bawah."
+          "Titik $(0,0)$ tidak boleh digunakan untuk menguji pertidaksamaan linear dua variabel.",
+          "Karena hasil uji bernilai SALAH, daerah yang memuat $(0,0)$ JANGAN DIARSIR (atau harus dijauhi), bukan malah diarsir.",
+          "Tanda pertidaksamaan $\\geq$ otomatis membuat arsiran selalu ke arah kiri bawah."
         ],
         correct_index: 1,
-        explanation: "Jeli sekali! Jika hasil uji suatu titik bernilai **SALAH**, artinya daerah yang memuat titik tersebut **bukan** penyelesaiannya, sehingga harus diarsir menjauhi titik tersebut (atau dibuang bersih untuk daerah bersih). Siti salah mengarsir wilayah."
+        explanation: "Jeli sekali! Jika hasil uji suatu titik bernilai **SALAH**, artinya daerah yang memuat titik tersebut **bukan** penyelesaiannya, sehingga harus diarsir menjauhi titik tersebut. Siti salah mengarsir wilayah."
       },
       {
         step: 4,
         type: "quiz",
         title: "Analisis Kasus 3: Coretan Doni (Eliminasi Batas Wilayah)",
         student: "Doni",
-        wrong_answer_html: "Sistem garis batas:<br>1) 2x + y = 12 &nbsp;&nbsp;&nbsp;| dikali 2 | &rArr; 4x + 2y = 24<br>2) x + 2y = 10<br>---------------------------------- (-)<br>3x = 14 &rArr; x = 14/3",
+        wrong_answer_html: "Sistem garis batas:<br>1) $2x + y = 12 \\quad | \\times 2 | \\implies 4x + 2y = 24$<br>2) $x + 2y = 10$<br>---------------------------------- (-)<br>$3x = 14 \\implies x = 14/3$",
         question: "Doni mencari titik potong kedua garis batas untuk menemukan titik pojok DHP. Namun ia keliru saat menyamakan koefisien. Di mana letak salahnya?",
         options: [
-          "Doni salah mengurangkan 24 - 10, seharusnya hasilnya 20.",
-          "Doni mengalikan persamaan (1) dengan 2, tetapi ia lupa mengalikan konstanta 12 dengan 2 (seharusnya 24 sudah benar, tapi pengalian suku lain sering luput).",
-          "Doni mengalikan persamaan (1) dengan 2, tapi konstanta 12 di ruas kanan lupa dikalikan 2 (seharusnya 24, bukan 12)."
+          "Doni mengalikan persamaan (1) dengan 2, tapi konstanta $12$ di ruas kanan lupa dikalikan 2 (seharusnya $24$, bukan $12$).",
+          "Doni salah mengurangkan $24 - 10$, seharusnya hasilnya $20$.",
+          "Doni mengalikan persamaan (1) dengan 2, tetapi ia lupa mengalikan konstanta $12$ dengan 2."
         ],
-        correct_index: 2,
+        correct_index: 0,
         explanation: "Mantap! Sifat distributif perkalian persamaan sering menjebak. Jika seluruh persamaan $2x + y = 12$ dikalikan 2, maka menjadi $4x + 2y = 24$. Doni seringkali menuliskan angka 12 tetap utuh di ruas kanan, sehingga proses eliminasi berikutnya berantakan."
       },
       {
@@ -316,34 +321,27 @@
         type: "quiz",
         title: "Analisis Kasus 4: Coretan Rina (Menentukan Titik Pojok)",
         student: "Rina",
-        wrong_answer_html: "Karena kendala x &ge; 0 dan y &ge; 0 serta tanda pertidaksamaan adalah (&ge;), maka daerah himpunan penyelesaiannya dibatasi oleh titik pojok:<br>(0,0), (6,0), dan (0,5).",
-        question: "Rina menguji titik-titik pojok untuk dimasukkan ke fungsi objektif. Namun daerah penyelesaian untuk tanda (&ge;) memiliki karakteristik tertentu pada kuadran pertama. Apa kesalahan Rina?",
+        wrong_answer_html: "Karena kendala $x \\geq 0$ dan $y \\geq 0$ serta tanda pertidaksamaan adalah $(\\geq)$, maka daerah himpunan penyelesaiannya dibatasi oleh titik pojok:<br>$(0,0), (6,0),$ dan $(0,5)$.",
+        question: "Rina menguji titik-titik pojok untuk dimasukkan ke fungsi objektif. Namun daerah penyelesaian untuk tanda $(\\geq)$ memiliki karakteristik tertentu pada kuadran pertama. Apa kesalahan Rina?",
         options: [
           "Rina melewatkan titik potong antar kedua garis di dalam DHP, dan mengira batasnya hanya memotong sumbu koordinat.",
-          "Titik (0,0) tidak mungkin menjadi titik pojok jika tandanya lebih dari sama dengan (&ge;).",
-          "Rina salah membaca titik potong sumbu y untuk garis kedua, seharusnya (0,10)."
+          "Titik $(0,0)$ tidak mungkin menjadi titik pojok jika tandanya lebih dari sama dengan $(\\geq)$.",
+          "Rina salah membaca titik potong sumbu y untuk garis kedua, seharusnya $(0,10)$."
         ],
         correct_index: 0,
-        explanation: "Super Teliti! Untuk sistem pertidaksamaan dengan tanda (&ge;), DHP berada di *daerah luar* (menjauhi titik pusat). Titik pojoknya mencakup perpotongan sumbu koordinat DAN titik potong antar garis itu sendiri di kuadran I. Rina lupa menghitung titik potong antar garis."
+        explanation: "Super Teliti! Untuk sistem pertidaksamaan dengan tanda $(\\geq)$, DHP berada di *daerah luar* (menjauhi titik pusat). Titik pojoknya mencakup perpotongan sumbu koordinat DAN titik potong antar garis itu sendiri di kuadran I. Rina lupa menghitung titik potong antar garis."
       },
       {
         step: 6,
         type: "quiz",
         title: "Analisis Kasus 5: Coretan Maya (Miskonsepsi Minimum vs Maksimum)",
         student: "Maya",
-        wrong_answer_html: "Setelah uji titik pojok diperoleh nilai f(x,y):\n&bull; Di titik A = 240.000\n&bull; Di titik B = 310.000\n&bull; Di titik C = 200.000\n\nMaka nilai minimum keuntungan adalah 310.000."
-      },
-      {
-        step: 6,
-        type: "quiz",
-        title: "Analisis Kasus 5: Coretan Maya (Miskonsepsi Minimum vs Maksimum)",
-        student: "Maya",
-        wrong_answer_html: "Setelah uji titik pojok diperoleh nilai f(x,y):\n&bull; Di titik A = 240.000\n&bull; Di titik B = 310.000\n&bull; Di titik C = 200.000\n\nMaka nilai minimum keuntungan adalah 310.000.",
+        wrong_answer_html: "Setelah uji titik pojok diperoleh nilai $f(x,y)$:<br>&bull; Di titik A = $240.000$<br>&bull; Di titik B = $310.000$<br>&bull; Di titik C = $200.000$<br><br>Maka nilai minimum keuntungan adalah $310.000$.",
         question: "Maya sudah menghitung nilai fungsi objektif di setiap titik pojok dengan benar. Namun ia salah menyimpulkan pertanyaan akhir. Mengapa?",
         options: [
-          "Maya memilih angka terbesar (310.000) padahal yang ditanyakan adalah nilai MINIMUM (terkecil), yaitu 200.000.",
+          "Maya memilih angka terbesar ($310.000$) padahal yang ditanyakan adalah nilai MINIMUM (terkecil), yaitu $200.000$.",
           "Maya seharusnya menjumlahkan seluruh nilai titik pojok untuk mencari rata-ratanya.",
-          "Nilai minimum pada program linear selalu berada di titik (0,0)."
+          "Nilai minimum pada program linear selalu berada di titik $(0,0)$."
         ],
         correct_index: 0,
         explanation: "Sangat Tepat! Ini adalah jebakan klasik psikologis ujian: siswa terbiasa mencari nilai maksimum/terbesar. Ketika soal meminta **minimum**, pilih nilai yang paling kecil di antara titik pojok yang memenuhi (yaitu 200.000). Selalu baca perintah akhir soal!"
@@ -354,7 +352,7 @@
         title: "Misi Selesai, Ahli SPTLDV!",
         outro_text: "Luar Biasa! Kamu telah berhasil mendiagnosis 5 jebakan utama dalam pengerjaan SPTLDV dan Program Linear, mulai dari kesalahan titik potong sumbu, aturan arsiran uji titik, distribusi eliminasi, hingga salah mengambil kesimpulan nilai minimum.",
         takeaways: [
-          "1. Teliti saat mencari titik potong sumbu x (saat y=0) dan sumbu y (saat x=0).",
+          "1. Teliti saat mencari titik potong sumbu x (saat $y=0$) dan sumbu y (saat $x=0$).",
           "2. Hasil uji titik yang SALAH berarti daerah tersebut menjauhi arsiran.",
           "3. Distribusikan pengali secara adil ke seluruh suku dalam eliminasi sistem.",
           "4. Perhatikan titik potong antar garis sebagai bagian dari titik pojok DHP.",
@@ -456,6 +454,16 @@
           </div>
         `;
       }
+
+      // Trigger KaTeX rendering on dynamically injected content
+      if (window.renderMathInElement) {
+        renderMathInElement(container, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "$", right: "$", display: false}
+          ]
+        });
+      }
     }
 
     function updateHeaderAndNav() {
@@ -520,8 +528,11 @@
       updateHeaderAndNav();
     });
 
-    renderStepContent();
-    updateHeaderAndNav();
+    // Initial load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderStepContent();
+      updateHeaderAndNav();
+    });
   </script>
 </body>
 </html>
